@@ -69,9 +69,37 @@ curl --location 'localhost:8080/api/v1/calculate' \ --header 'Content-Type: appl
 Тело ответа
 ```json
 {
-    "id": "0"
+    "id": 0
 }
 ```
+#### 201
+```bash
+curl --location --request GET 'localhost:8080/api/v1/calculate' \ --header 'Content-Type: application/json' \ --data '{ "expression": "2+2*22-3" }'
+```
+response
+```json
+{
+    "id": 0
+}
+```
+#### 422:Unprocessable Entity
+```bash
+curl --location --request GET 'localhost:8080/api/v1/calculate' \ --header 'Content-Type: application/json' \ --data '{ "expression": "2+2*22-3abc" }'
+```
+response
+```json
+Invalid expression
+```
+
+#### 500:Internal Server Error
+```bash
+curl --location --request GET 'localhost:8080/api/v1/calculate' \ --header 'Content-Type: application/json' \ --data '{ "expression": "internal" }'
+```
+response
+```json
+Internal error
+```
+
 <br>
 
 ### Получение списка выражений
