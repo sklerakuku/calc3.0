@@ -74,7 +74,7 @@ curl --location 'localhost:8080/api/v1/calculate' \ --header 'Content-Type: appl
 ```
 #### 201
 ```bash
-curl --location --request GET 'localhost:8080/api/v1/calculate' \ --header 'Content-Type: application/json' \ --data '{ "expression": "2+2*22-3" }'
+curl --location 'localhost:8080/api/v1/calculate' \ --header 'Content-Type: application/json' \ --data '{ "expression": "2+2*22-3" }'
 ```
 response
 ```json
@@ -84,7 +84,7 @@ response
 ```
 #### 422:Unprocessable Entity
 ```bash
-curl --location --request GET 'localhost:8080/api/v1/calculate' \ --header 'Content-Type: application/json' \ --data '{ "expression": "2+2*22-3abc" }'
+curl --location 'localhost:8080/api/v1/calculate' \ --header 'Content-Type: application/json' \ --data '{ "expression": "2+2*22-3abc" }'
 ```
 response
 ```json
@@ -93,7 +93,7 @@ Invalid expression
 
 #### 500:Internal Server Error
 ```bash
-curl --location --request GET 'localhost:8080/api/v1/calculate' \ --header 'Content-Type: application/json' \ --data '{ "expression": "internal" }'
+curl --location 'localhost:8080/api/v1/calculate' \ --header 'Content-Type: application/json' \ --data '{ "expression": "internal" }'
 ```
 response
 ```json
@@ -160,4 +160,13 @@ curl --location 'localhost:8080/api/v1/expressions/0'
 
 ## 📖  Документация
 > "*КАК ВСЁ ЭТО РАБОТАЕТ?*"
+
 ![Screenshot of a comment on a GitHub issue showing an image, added in the Markdown, of an Octocat smiling and raising a tentacle.](https://github.com/sklerakuku/calc3.0/blob/bfc3483c6f73fceaa8c07843b1c9560b2f48e740/123%20(1).png)
+
+Сервер(orchestator) принимает арифметическое выражение, переводит его в набор последовательных задач и обеспечивает порядок их выполнения. 
+
+Вычислитель(agent) всегда хочет получить от оркестратора задачу, выполнить её и вернуть серверу результат.
+
+
+
+
