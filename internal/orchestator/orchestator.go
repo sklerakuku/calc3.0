@@ -53,16 +53,16 @@ func (o *Orchestrator) AddCalculation(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if !isValidExpression(req.Expression) {
-		http.Error(w, "Invalid expression", http.StatusUnprocessableEntity)
-		return
-	}
-
 	if req.Expression == "internal" {
 		http.Error(w, "Internal error", http.StatusInternalServerError)
 		return
 	}
 
+
+	if !isValidExpression(req.Expression) {
+		http.Error(w, "Invalid expression", http.StatusUnprocessableEntity)
+		return
+	}
 	o.mu.Lock()
 	id := o.nextID
 	o.nextID++
