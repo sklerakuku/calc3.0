@@ -59,7 +59,7 @@ func (o *Orchestrator) AddCalculation(w http.ResponseWriter, r *http.Request) {
 	}
 
 
-	if !isValidExpression(req.Expression) {
+	if !isValidExpression(req.Expression) || req.Expression == "" {
 		http.Error(w, "Invalid expression", http.StatusUnprocessableEntity)
 		return
 	}
