@@ -62,7 +62,7 @@ TIME_DIVISIONS_MS - время выполнения операции делен�
 *localhost:8080/api/v1/calculate'*
     
 ```bash
-curl --location 'localhost/api/v1/calculate' \ --header 'Content-Type: application/json' \ --data '{ "expression": "2+2*6" }'
+curl --location 'localhost:8080/api/v1/calculate' \ --header 'Content-Type: application/json' \ --data '{ "expression": "2+2*6" }'
 ```
  Коды ответа: 201 - выражение принято для вычисления, 422 - невалидные данные, 500 - что-то пошло не так
 
@@ -78,7 +78,7 @@ curl --location 'localhost/api/v1/calculate' \ --header 'Content-Type: applicati
 *localhost:8080/api/v1/expressions'*
     
 ```bash
-curl --location 'localhost/api/v1/expressions' 
+curl --location 'localhost:8080/api/v1/expressions' 
 ```
 Тело ответа
 ```json
@@ -107,7 +107,7 @@ curl --location 'localhost/api/v1/expressions'
 ### Получение выражения по его идентификатору
 *localhost:8080/api/v1/expressions/:id'*
  ```bash
-curl --location 'localhost/api/v1/expressions/0'
+curl --location 'localhost:8080/api/v1/expressions/0'
 ```
 
 Коды ответа:
