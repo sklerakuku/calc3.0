@@ -132,4 +132,4 @@ curl --location 'localhost/api/v1/expressions/0'
 
 ## 📖  Документация
 > "*КАК ВСЁ ЭТО РАБОТАЕТ?*"
-
+![Screenshot of a comment on a GitHub issue showing an image, added in the Markdown, of an Octocat smiling and raising a tentacle.](https://github.com/sklerakuku/calc3.0/blob/bfc3483c6f73fceaa8c07843b1c9560b2f48e740/123%20(1).png)
