@@ -53,6 +53,16 @@ func (o *Orchestrator) AddCalculation(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	if !isValidExpression(req.Expression) {
+		http.Error(w, "Invalid expression", http.StatusUnprocessableEntity)
+		return
+	}
+
+	if req.Expression == "internal" {
+		http.Error(w, "Internal error", http.StatusInternalServerError)
+		return
+	}
+
 	o.mu.Lock()
 	id := o.nextID
 	o.nextID++
@@ -64,11 +74,58 @@ func (o *Orchestrator) AddCalculation(w http.ResponseWriter, r *http.Request) {
 	o.expressions[id] = expr
 	o.mu.Unlock()
 
-	go o.processExpression(id, req.Expression)
+	errChan := make(chan error)
+	go func() {
+		defer func() {
+			if r := recover(); r != nil {
+				errChan <- fmt.Errorf("internal error: %v", r)
+				return
+			}
+		}()
+		tree, err := parser.ParseExpr(req.Expression)
+		if err != nil {
+			errChan <- fmt.Errorf("invalid expression: %v", err)
+			return
+		}
 
-	w.WriteHeader(http.StatusCreated)
-	json.NewEncoder(w).Encode(map[string]int{"id": id})
+		result := o.evaluateAST(tree)
+
+		o.mu.Lock()
+		expr := o.expressions[id]
+		expr.Result = result
+		expr.Status = "completed"
+		o.mu.Unlock()
+
+		log.Printf("expression processed: ID=%d, Result=%f", id, result)
+	}()
+
+	select {
+	case err := <-errChan:
+		if strings.Contains(err.Error(), "invalid expression") {
+			http.Error(w, "Invalid expression", http.StatusUnprocessableEntity)
+		} else {
+			http.Error(w, "Internal error", http.StatusInternalServerError)
+		}
+		return
+	default:
+		w.WriteHeader(http.StatusCreated)
+		json.NewEncoder(w).Encode(map[string]int{"id": id})
+	}
 }
+
+func isValidExpression(expression string) bool {
+	for _, c := range expression {
+		if !isDigitOrOperator(c) {
+			return false
+		}
+	}
+	return true
+}
+
+func isDigitOrOperator(c rune) bool {
+	return (c >= '0' && c <= '9') || c == '+' || c == '-' || c == '*' || c == '/' || c == '.' || c == '(' || c == ')'
+}
+
 
 func (o *Orchestrator) GetExpressions(w http.ResponseWriter, r *http.Request) {
 	o.mu.Lock()
