@@ -45,6 +45,7 @@ func New(cfg *config.Config) *Orchestrator {
 }
 
 func (o *Orchestrator) AddCalculation(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
 	var req struct {
 		Expression string `json:"expression"`
 	}
@@ -135,7 +136,8 @@ func (o *Orchestrator) GetExpressions(w http.ResponseWriter, r *http.Request) {
 	}
 	o.mu.Unlock()
 
-	log.Printf("Returning expressions: %+v", expressions)
+	log.Printf("expressions: %+v", expressions)
+	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(map[string][]Expression{"expressions": expressions})
 }
 
@@ -155,6 +157,7 @@ func (o *Orchestrator) GetExpression(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(map[string]*Expression{"expression": expr})
 }
 
