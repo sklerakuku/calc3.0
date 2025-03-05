@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculator-бука</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
+        input, button { font-size: 16px; padding: 5px; }
+        #expressions { margin-top: 20px; }
+        .expression { border: 1px solid #ddd; padding: 10px; margin-bottom: 10px; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #ccd1fc; }
+    </style>
+</head>
+<body>
+    <h1>🖤💨🎞✨🎇🎶 Calculator</h1>
+    <form id="calculatorForm">
+        <input type="text" id="expressionInput" placeholder="Ввведи выражение" required>
+        <button type="submit">Вычислить</button>
+    </form>
+
+    <div id="expressions">
+        <h2>Expressions</h2>
+        <table id="expressionsTable">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>статус 🛺🚑🚒🚓</th>
+                    <th>результат O(∩_∩)O</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- выражения -->
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        document.getElementById('calculatorForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const expression = document.getElementById('expressionInput').value;
+            
+            fetch('/api/v1/calculate', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ expression: expression }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('expressionInput').value = '';
+                loadExpressions();
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred while calculating the expression.');
+            });
+        });
+
+        function loadExpressions() {
+            fetch('/api/v1/expressions')
+            .then(response => response.json())
+            .then(data => {
+                const tbody = document.querySelector('#expressionsTable tbody');
+                tbody.innerHTML = '';
+                data.expressions.forEach(expr => {
+                    const row = `
+                        <tr>
+                            <td>${expr.id}</td>
+                            <td>${expr.status}</td>
+                            <td>${expr.result !== undefined ? expr.result : ''}</td>
+                        </tr>
+                    `;
+                    tbody.innerHTML += row;
+                });
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred while loading expressions.');
+            });
+        }
+
+        loadExpressions();
+
+        setInterval(loadExpressions, 5000);
+    </script>
+</body>
+</html>
