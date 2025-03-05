@@ -34,14 +34,14 @@ cd calc3.0
 ## ▶️ Запуск
 Запустите сервисы оркестратора и агента поочередно в разных терминалах.
 ```bash
-go run ./cmd/orchestrator
+go run ./cmd/orchestator
 ```
 ```bash
 go run ./cmd/agent
 ```
 Или же одной командой
 ```bash
-go run ./cmd/orchestrator && go run ./cmd/agent
+go run ./cmd/orchestator && go run ./cmd/agent
 ```
 Всё готово!! Теперь вы сервис доступен по адресу http://localhost:8080/
 
